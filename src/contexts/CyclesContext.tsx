@@ -1,4 +1,4 @@
-import differenceInSeconds from "date-fns/differenceInSeconds";
+import { differenceInSeconds } from "date-fns";
 import {
   createContext,
   ReactNode,
@@ -6,7 +6,6 @@ import {
   useReducer,
   useState,
 } from "react";
-import { ActionTypes } from "../actions";
 import {
   addNewCycleAction,
   interruptCurrentCycleAction,
@@ -46,11 +45,15 @@ export function CyclesContextProvider({
     },
     () => {
       const storedStateAsJSON = localStorage.getItem(
-        "@idnite-timer:cycles-state-1.0.1"
+        "@idnite-timer:cycles-state-1.0.0"
       );
       if (storedStateAsJSON) {
         return JSON.parse(storedStateAsJSON);
       }
+      return {
+        cycles: [],
+        activeCycleId: null,
+      };
     }
   );
 
@@ -66,10 +69,8 @@ export function CyclesContextProvider({
 
   useEffect(() => {
     const stateJSON = JSON.stringify(cyclesState);
-    localStorage.setItem("@idnite-timer:cycles-state-1.0.1", stateJSON);
+    localStorage.setItem("@idnite-timer:cycles-state-1.0.0", stateJSON);
   }, [cyclesState]);
-
-  const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
 
   function setSecondsPassed(seconds: number) {
     setAmountSecondsPassed(seconds);
